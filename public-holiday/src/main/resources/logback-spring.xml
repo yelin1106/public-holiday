@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	
+	<property resource="application.properties" />
+	<property name="LOG_PATH" value="${spring.logging.file.path}" />
+	<property name="LOG_FILE_NAME" value="${spring.logging.file.name}" />
+	
+	<!--<springProperty scope="LOG_PATH" name="spring.logging.file.path" source="spring.logging.file.path"/>-->
+	
+	<property name="CONSOLE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight([%-3level]) %logger{5} - %msg %n" />
+	<property name="FILE_PATTERN" value="%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] [%-3level] %logger{5} - %msg %n" />
+	
+    <!-- Console appender 설정 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>${CONSOLE_PATTERN}</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/${LOG_FILE_NAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${FILE_PATTERN}</pattern>
+			<ImmediateFlush>true</ImmediateFlush>
+		</encoder>
+	</appender>
+
+
+	<logger name="com.example.demo" level="DEBUG"/>
+	
+	<root level="INFO">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</root>
+</configuration>
