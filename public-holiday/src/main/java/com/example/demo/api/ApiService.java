@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.example.demo.dto.TbCountryCode;
-import com.example.demo.dto.TbPublicHolidays;
+import com.example.demo.dto.TbCountryCodeDto;
+import com.example.demo.dto.TbPublicHolidaysDto;
+import com.example.demo.repository.CountryCodeRepository;
+import com.example.demo.repository.PublicHolidaysRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,10 +36,10 @@ public class ApiService {
 		WebClient webClient = webClientBuilder.build();
 		String uri = "https://date.nager.at/api/v3/AvailableCountries";
 		
-		List<TbCountryCode> countryList = webClient.get()
+		List<TbCountryCodeDto> countryList = webClient.get()
 				.uri(uri)
 				.retrieve()
-				.bodyToFlux(TbCountryCode.class)
+				.bodyToFlux(TbCountryCodeDto.class)
 				.collectList()
 				.block();
 		
@@ -51,23 +53,23 @@ public class ApiService {
 		String uri = "https://date.nager.at/api/v3/PublicHolidays/";
 		
 		//국가 리스트 가져오기
-		List<TbCountryCode> countryList = countryCodeRepository.findAll();
+		List<TbCountryCodeDto> countryList = countryCodeRepository.findAll();
 		
 		//전세계 5년치 데이터 받아오기
-		List<TbPublicHolidays> resList = new ArrayList<TbPublicHolidays>();
+		List<TbPublicHolidaysDto> resList = new ArrayList<TbPublicHolidaysDto>();
 		
 		//최근 5년 연도 가져오기
 		List<String> years = getRecentFiveYears();
 		for(String year : years) {
-			for(TbCountryCode countryCode : countryList) {
+			for(TbCountryCodeDto countryCode : countryList) {
 				
 				try {
-					List<TbPublicHolidays> tmpList = webClient.get()
+					List<TbPublicHolidaysDto> tmpList = webClient.get()
 							.uri(uri + year + "/" + countryCode.getCountryCode())
 							.header("Content-Type", "application/json")
 							.accept(MediaType.APPLICATION_JSON)
 							.retrieve()
-							.bodyToFlux(TbPublicHolidays.class)
+							.bodyToFlux(TbPublicHolidaysDto.class)
 							.collectList()
 							.block();
 					resList.addAll(tmpList);
@@ -85,9 +87,9 @@ public class ApiService {
 							.block();
 					
 					Gson gson = new Gson();
-					List<TbPublicHolidays> tmpList = gson.fromJson(strList, new TypeToken<ArrayList<TbPublicHolidays>>(){}.getType());
+					List<TbPublicHolidaysDto> tmpList = gson.fromJson(strList, new TypeToken<ArrayList<TbPublicHolidaysDto>>(){}.getType());
 					
-					for(TbPublicHolidays tmp : tmpList) {
+					for(TbPublicHolidaysDto tmp : tmpList) {
 						System.out.println(tmp.toString());
 					}
 					

@@ -1,12 +1,12 @@
 package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.example.demo.dto.DateCountryCode;
-import com.example.demo.dto.TbPublicHolidays;
+import com.example.demo.dto.DateCountryCodeDto;
+import com.example.demo.dto.TbPublicHolidaysDto;
 
-public interface PublicHolidaysRepository extends JpaRepository<TbPublicHolidays, DateCountryCode> {
-	
-	
+@Repository
+public interface PublicHolidaysRepository extends JpaRepository<TbPublicHolidaysDto, DateCountryCodeDto> {
 	
 }

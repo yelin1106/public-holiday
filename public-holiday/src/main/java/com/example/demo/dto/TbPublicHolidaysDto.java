@@ -11,9 +11,9 @@ import lombok.Data;
 
 @Entity
 @Data
-@IdClass(DateCountryCode.class)
+@IdClass(DateCountryCodeDto.class)
 @Table(name = "TB_PUBLIC_HOLIDAYS")
-public class TbPublicHolidays {
+public class TbPublicHolidaysDto {
 	
 	@Id
 //	@Column(length = 8)

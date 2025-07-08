@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "TB_COUNTRY_CODE")
-public class TbCountryCode {
+public class TbCountryCodeDto {
 	
 	@Id
 	@Column(name = "country_code", length = 2)
