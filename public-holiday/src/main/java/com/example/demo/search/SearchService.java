@@ -2,6 +2,8 @@ package com.example.demo.search;
 
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,8 +11,6 @@ import com.example.demo.dto.PaginationDto;
 import com.example.demo.dto.PublicHolidaysReqDto;
 import com.example.demo.dto.PublicHolidaysResDto;
 import com.example.demo.repository.SearchRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -26,10 +26,7 @@ public class SearchService {
 		long totalCnt = searchRepository.getCountryHolidaysCnt(reqData);
 		List<PublicHolidaysResDto> resultList = searchRepository.getCountryHolidays(reqData, reqPage);
 		
-		//paging 형태로 응답
-		ObjectMapper mapper = new ObjectMapper();
-		
-		//pagination
+		/* pagination */
 		PaginationDto pageDto = new PaginationDto();
 		pageDto.setOffset(reqPage.getOffset());
 		pageDto.setLimit(reqPage.getLimit());
@@ -38,18 +35,11 @@ public class SearchService {
 		long pages = (totalCnt%pageDto.getLimit() == 0) ? (totalCnt/pageDto.getLimit()) : (totalCnt/pageDto.getLimit() + 1);
 		pageDto.setTotalPages(pages);
 		
-		try {
-			String data = mapper.writeValueAsString(resultList);
-			String pagination = mapper.writeValueAsString(pageDto);
-			System.out.println(data);
-			System.out.println(pagination);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+		JSONObject response = new JSONObject();
+		response.put("data", new JSONArray(resultList));
+		response.put("pagination", new JSONObject(pageDto));
 		
-		//links?
-		
-		return "Success";
+		return response.toString();
 	}
 	
 }

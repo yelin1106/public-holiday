@@ -38,12 +38,11 @@ public class PublicHolidaysResDto {
 	
 	@Column(nullable = true)
 	private List<String> counties;
-//	private Object counties;
 	
 	@Column(nullable = true)
 	private String launchYear;
 	
 	@Column(nullable = true)
 	private List<String> types;
-//	private Object types;
+
 }

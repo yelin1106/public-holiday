@@ -27,57 +27,68 @@ public class SearchRepository {
 		query.append("on ph.countryCode = cc.countryCode ");
 		query.append("where 1=1 ");
 		
-		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null) {
+		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null)
 			query.append("and ph.countryCode = :countryCode ");
-		}
-		if(reqData.getYear()!="" && reqData.getYear()!=null) {
+		if(reqData.getYear()!="" && reqData.getYear()!=null)
 			query.append("and ph.date like :year ");
-		}
+		if(reqData.getFrom()!="" && reqData.getFrom()!=null
+				&& reqData.getTo()!="" && reqData.getTo()!=null)
+			query.append("and ph.date between :from AND :to ");
 		
 		TypedQuery<Long> queryEntity = entityManager.createQuery(query.toString(), Long.class);
 		
-		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null) queryEntity.setParameter("countryCode", reqData.getCountryCode());
-		if(reqData.getYear()!="" && reqData.getYear()!=null) queryEntity.setParameter("year", reqData.getYear()+"%");
+		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null)
+			queryEntity.setParameter("countryCode", reqData.getCountryCode());
+		if(reqData.getYear()!="" && reqData.getYear()!=null)
+			queryEntity.setParameter("year", reqData.getYear()+"%");
+		if(reqData.getFrom()!="" && reqData.getFrom()!=null
+				&& reqData.getTo()!="" && reqData.getTo()!=null) {
+			queryEntity.setParameter("from", reqData.getFrom());
+			queryEntity.setParameter("to", reqData.getTo());
+		}
 		
 		long cnt = queryEntity.getSingleResult();
-		
-//		long cnt = entityManager
-//				.createQuery(
-//						"select count(*) " 
-//						+ "from TbPublicHolidaysDto ph "
-//						+ "left join TbCountryCodeDto cc "
-//						+ "on ph.countryCode = cc.countryCode "
-//						+ "where ph.countryCode = :countryCode "
-//						+ "and ph.date like :year "
-//						, Long.class
-//						)
-//				.setParameter("countryCode", countryCode)
-//				.setParameter("year", year+"%")
-//				.getSingleResult();
 		
 		return cnt;
 	}
 	
 	public List<PublicHolidaysResDto> getCountryHolidays(PublicHolidaysReqDto reqData, PaginationDto reqPage) {
 		
-		List<PublicHolidaysResDto> resultList = entityManager
-				.createQuery(
-						"select ph.countryCode countryCode, cc.name countryName, ph.date date, ph.localName localName, ph.name name, ph.fixed fixed, ph.global global, ph.counties counties, ph.launchYear launchYear, ph.types types " 
-						+ "from TbPublicHolidaysDto ph "
-						+ "left join TbCountryCodeDto cc "
-						+ "on ph.countryCode = cc.countryCode "
-						+ "where ph.countryCode = :countryCode "
-						+ "and ph.date like :year "
-						+ "order by ph.date "
-						+ "limit :limit "
-						+ "offset :offset "
-						, PublicHolidaysResDto.class
-						)
-				.setParameter("countryCode", reqData.getCountryCode())
-				.setParameter("year", reqData.getYear()+"%")
+		StringBuilder query = new StringBuilder();
+		query.append("select ph.countryCode, cc.name countryName, ph.date, ph.localName, ph.name, ph.fixed, ph.global, ph.counties, ph.launchYear, ph.types ");
+		query.append("from TbPublicHolidaysDto ph ");
+		query.append("left join TbCountryCodeDto cc ");
+		query.append("on ph.countryCode = cc.countryCode ");
+		query.append("where 1=1 ");
+		
+		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null)
+			query.append("and ph.countryCode = :countryCode ");
+		if(reqData.getYear()!="" && reqData.getYear()!=null)
+			query.append("and ph.date like :year ");
+		if(reqData.getFrom()!="" && reqData.getFrom()!=null
+				&& reqData.getTo()!="" && reqData.getTo()!=null)
+			query.append("and ph.date between :from AND :to ");
+		
+		query.append("order by ph.date ");
+		query.append("limit :limit ");
+		query.append("offset :offset ");
+		
+		TypedQuery<PublicHolidaysResDto> queryEntity = entityManager
+				.createQuery(query.toString(), PublicHolidaysResDto.class)
 				.setParameter("limit", reqPage.getLimit())
-				.setParameter("offset", reqPage.getOffset())
-				.getResultList();
+				.setParameter("offset", reqPage.getOffset());
+		
+		if(reqData.getCountryCode()!="" && reqData.getCountryCode()!=null)
+			queryEntity.setParameter("countryCode", reqData.getCountryCode());
+		if(reqData.getYear()!="" && reqData.getYear()!=null)
+			queryEntity.setParameter("year", reqData.getYear()+"%");
+		if(reqData.getFrom()!="" && reqData.getFrom()!=null
+				&& reqData.getTo()!="" && reqData.getTo()!=null) {
+			queryEntity.setParameter("from", reqData.getFrom());
+			queryEntity.setParameter("to", reqData.getTo());
+		}
+		
+		List<PublicHolidaysResDto> resultList = queryEntity.getResultList();
 		
 		return resultList;
 		
