@@ -25,7 +25,7 @@ public class ApiTest {
 	void getPublicHolidays() {
 		apiService.getCountryCode();
 		
-		String result = apiService.getPublicHolidays();
+		String result = apiService.getPublicHolidays(5);
 		Assertions.assertThat(result).isEqualTo("Success");
 	}
 	

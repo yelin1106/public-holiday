@@ -50,17 +50,18 @@ public class ApiService {
 		return "Success";
 	}
 	
-	public String getPublicHolidays() {
+	public String getPublicHolidays(int nYears) {
 		WebClient webClient = webClientBuilder.build();
 		String uri = "https://date.nager.at/api/v3/PublicHolidays/";
 		
 		/* 국가 리스트 가져오기 */
 		List<TbCountryCodeDto> countryList = countryCodeRepository.findAll();
 		
-		/* 전세계 5년치 데이터 받아오기 */
+		/* 전세계 n년치 데이터 받아오기 */
 		List<TbPublicHolidaysDto> resList = new ArrayList<TbPublicHolidaysDto>();
 		
-		List<String> years = getRecentFiveYears();
+		List<String> years = getRecentNYears(nYears);
+		
 		for(String year : years) {
 			for(TbCountryCodeDto countryCode : countryList) {
 				
@@ -76,7 +77,7 @@ public class ApiService {
 					resList.addAll(tmpList);
 				} catch (Exception e) {
 					
-					log.info("===================WebClient Exception================");
+					log.info("WebClient Exception");
 					log.info("{}/{}",year,countryCode.getCountryCode());
 					
 					String strList = webClient.get()
@@ -105,11 +106,11 @@ public class ApiService {
 		return "Success";
 	}
 	
-	public List<String> getRecentFiveYears() {
+	public List<String> getRecentNYears(int nYears) {
 		List<String> years = new ArrayList<>();
 		
 		int currentYear = LocalDate.now().getYear();
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<nYears ; i++) {
 			years.add(Integer.toString(currentYear-i));
 		}
 		
