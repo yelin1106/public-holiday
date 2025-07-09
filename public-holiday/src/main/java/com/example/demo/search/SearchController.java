@@ -1,6 +1,7 @@
 package com.example.demo.search;
 import com.example.demo.dto.PublicHolidaysReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,7 +55,10 @@ public class SearchController {
 		
 		String response = searchService.getHolidays(publicHolidaysReqDto, paginationDto);
 		
-		return ResponseEntity.ok(response);
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(response);
 	}
 	
 }

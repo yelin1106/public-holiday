@@ -3,6 +3,7 @@ package com.example.demo.api;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.CountryYearDto;
+import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping("/api")
@@ -36,7 +38,14 @@ public class ApiController {
 		
 		String response = apiService.updatePublicHolidays(dto);
 		
-		return ResponseEntity.ok(response);
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("status", 200);
+		jsonObject.addProperty("message", response);
+		
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(jsonObject.toString());
 	}
 	
 	@DeleteMapping("/delete/{year}/{countryCode}")
@@ -56,7 +65,14 @@ public class ApiController {
 		
 		int cnt = apiService.deletePublicHolidays(dto);
 		
-		return ResponseEntity.ok(Integer.toString(cnt));
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("status", 200);
+		jsonObject.addProperty("count", cnt);
+		
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(jsonObject.toString());
 	}
 	
     public boolean isValidYear(String year) {
