@@ -118,7 +118,7 @@ public class ApiService {
 	
 	public String updatePublicHolidays(CountryYearDto dto) {
 		
-		//데이터 조회
+		/* 데이터 조회 */
 		WebClient webClient = webClientBuilder.build();
 		String uri = "https://date.nager.at/api/v3/PublicHolidays/";
 		
@@ -138,7 +138,7 @@ public class ApiService {
 			return e.getMessage();
 		}
 		
-		return "success";
+		return "Success";
 	}
 	
 	public int deletePublicHolidays(CountryYearDto dto) {
