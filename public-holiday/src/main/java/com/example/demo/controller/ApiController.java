@@ -15,6 +15,11 @@ import com.example.demo.dto.CountryYearDto;
 import com.example.demo.service.ApiService;
 import com.google.gson.JsonObject;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api")
 public class ApiController {
@@ -23,6 +28,11 @@ public class ApiController {
 	private ApiService apiService;
 	
 	@PutMapping("/update/{year}/{countryCode}")
+	@Operation(summary = "특정 연도,국가의 공휴일 업데이트", description = "특정 연도, 국가 데이터를 재호출하여 업데이트")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json")),
+			@ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json"))
+	})
 	public ResponseEntity<String> updatePublicHolidays(
 			@PathVariable("year") String year,
 			@PathVariable("countryCode") String countryCode) {
@@ -50,6 +60,11 @@ public class ApiController {
 	}
 	
 	@DeleteMapping("/delete/{year}/{countryCode}")
+	@Operation(summary = "특정 연도, 국가의 공휴일 데이터 삭제", description = "특정 연도, 국가의 공휴일 데이터 삭제")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json")),
+			@ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json"))
+	})
 	public ResponseEntity<String> deletePublicHolidays(
 			@PathVariable("year") String year,
 			@PathVariable("countryCode") String countryCode) {

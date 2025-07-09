@@ -2,6 +2,11 @@ package com.example.demo.controller;
 import com.example.demo.dto.PublicHolidaysReqDto;
 import com.example.demo.service.SearchService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,11 @@ public class SearchController {
 	private SearchService searchService;
 
 	@GetMapping("/publicHolidays")
+	@Operation(summary = "연도, 국가, 기간(form-to) 필터 기반 공휴일 조회", description = "연도, 국가, 기간(form-to) 필터 기반 전세계의 공휴일 조회")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json")),
+			@ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json"))
+	})
 	public ResponseEntity<String> getPublicHolidays(
 			@ModelAttribute("req") PublicHolidaysReqDto publicHolidaysReqDto) {
 		
