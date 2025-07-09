@@ -16,7 +16,7 @@ import lombok.Data;
 public class TbPublicHolidaysDto {
 	
 	@Id
-//	@Column(length = 8)
+	@Column(length = 10)
 	private String date;
 	
 	@Id
@@ -43,5 +43,5 @@ public class TbPublicHolidaysDto {
 	
 	@Column(nullable = true)
 	private List<String> types;
-	
+
 }

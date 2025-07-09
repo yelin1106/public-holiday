@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import com.example.demo.dto.CountryYearDto;
 import com.example.demo.dto.TbCountryCodeDto;
 import com.example.demo.dto.TbPublicHolidaysDto;
 import com.example.demo.repository.CountryCodeRepository;
@@ -52,13 +54,12 @@ public class ApiService {
 		WebClient webClient = webClientBuilder.build();
 		String uri = "https://date.nager.at/api/v3/PublicHolidays/";
 		
-		//국가 리스트 가져오기
+		/* 국가 리스트 가져오기 */
 		List<TbCountryCodeDto> countryList = countryCodeRepository.findAll();
 		
-		//전세계 5년치 데이터 받아오기
+		/* 전세계 5년치 데이터 받아오기 */
 		List<TbPublicHolidaysDto> resList = new ArrayList<TbPublicHolidaysDto>();
 		
-		//최근 5년 연도 가져오기
 		List<String> years = getRecentFiveYears();
 		for(String year : years) {
 			for(TbCountryCodeDto countryCode : countryList) {
@@ -90,7 +91,7 @@ public class ApiService {
 					List<TbPublicHolidaysDto> tmpList = gson.fromJson(strList, new TypeToken<ArrayList<TbPublicHolidaysDto>>(){}.getType());
 					
 					for(TbPublicHolidaysDto tmp : tmpList) {
-						System.out.println(tmp.toString());
+						log.info(tmp.toString());
 					}
 					
 					resList.addAll(tmpList);
@@ -113,6 +114,38 @@ public class ApiService {
 		}
 		
 		return years;
+	}
+	
+	public String updatePublicHolidays(CountryYearDto dto) {
+		
+		//데이터 조회
+		WebClient webClient = webClientBuilder.build();
+		String uri = "https://date.nager.at/api/v3/PublicHolidays/";
+		
+		try {
+			List<TbPublicHolidaysDto> list = webClient.get()
+					.uri(uri + dto.getYear() + "/" + dto.getCountryCode())
+					.header("Content-Type", "application/json")
+					.accept(MediaType.APPLICATION_JSON)
+					.retrieve()
+					.bodyToFlux(TbPublicHolidaysDto.class)
+					.collectList()
+					.block();
+			
+			publicHolidaysRepository.saveAll(list);
+			
+		} catch (WebClientResponseException e) {
+			return e.getMessage();
+		}
+		
+		return "success";
+	}
+	
+	public int deletePublicHolidays(CountryYearDto dto) {
+		
+		int cnt = publicHolidaysRepository.deleteByDateAndCountryCode(dto.getYear()+"%", dto.getCountryCode());
+		
+		return cnt;
 	}
 	
 }
