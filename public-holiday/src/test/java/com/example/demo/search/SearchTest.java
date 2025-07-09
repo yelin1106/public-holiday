@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.demo.dto.PaginationDto;
 import com.example.demo.dto.PublicHolidaysReqDto;
+import com.example.demo.service.SearchService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)

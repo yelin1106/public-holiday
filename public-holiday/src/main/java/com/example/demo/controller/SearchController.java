@@ -1,5 +1,7 @@
-package com.example.demo.search;
+package com.example.demo.controller;
 import com.example.demo.dto.PublicHolidaysReqDto;
+import com.example.demo.service.SearchService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
