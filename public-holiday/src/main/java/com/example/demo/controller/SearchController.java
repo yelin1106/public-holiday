@@ -23,19 +23,25 @@ public class SearchController {
 	public ResponseEntity<String> getPublicHolidays(
 			@ModelAttribute("req") PublicHolidaysReqDto publicHolidaysReqDto) {
 		
+		System.out.println(publicHolidaysReqDto.toString());
+		
 		/* req값 검증 */
-		if(publicHolidaysReqDto.getYear().length()>4) {
-			return ResponseEntity.badRequest().build();
-		}
-		if(publicHolidaysReqDto.getCountryCode().length()>2) {
-			return ResponseEntity.badRequest().build();
-		}
-		if(publicHolidaysReqDto.getFrom().length()>10) {
-			return ResponseEntity.badRequest().build();
-		}
-		if(publicHolidaysReqDto.getTo().length()>10) {
-			return ResponseEntity.badRequest().build();
-		}
+		if(publicHolidaysReqDto.getYear()!=null)
+			if(publicHolidaysReqDto.getYear().length()>4) {
+				return ResponseEntity.badRequest().build();
+			}
+		if(publicHolidaysReqDto.getCountryCode()!=null)
+			if(publicHolidaysReqDto.getCountryCode().length()>2) {
+				return ResponseEntity.badRequest().build();
+			}
+		if(publicHolidaysReqDto.getFrom()!=null)
+			if(publicHolidaysReqDto.getFrom().length()>10) {
+				return ResponseEntity.badRequest().build();
+			}
+		if(publicHolidaysReqDto.getTo()!=null)
+			if(publicHolidaysReqDto.getTo().length()>10) {
+				return ResponseEntity.badRequest().build();
+			}
 		
 		
 		/* page값 검증 */
