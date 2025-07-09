@@ -1,4 +1,4 @@
-package com.example.demo.search;
+package com.example.demo.api;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,27 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.example.demo.dto.PaginationDto;
-import com.example.demo.dto.PublicHolidaysReqDto;
+import com.example.demo.dto.CountryYearDto;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class SearchTest {
+public class deleteTest {
 	
 	@Autowired
-	private SearchService searchService;
+	private ApiService apiService;
 	
 	@Test
-	void getHolidays() {
-		PublicHolidaysReqDto reqData = new PublicHolidaysReqDto();
-		reqData.setCountryCode("US");
-		reqData.setYear("2025");
+	void updatePublicHolidays() {
 		
-		PaginationDto reqPage = new PaginationDto();
-		reqPage.setCurrentPage(1);
-		reqPage.setLimit(10);
+		CountryYearDto dto = new CountryYearDto();
+		dto.setYear("2025");
+		dto.setCountryCode("KR");
 		
-		String result = searchService.getHolidays(reqData, reqPage);
+		int result = apiService.deletePublicHolidays(dto);
 		
 	}
 	
