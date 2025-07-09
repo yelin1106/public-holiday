@@ -79,7 +79,7 @@
     ```
 
 ### 2) PUT /api/update/{year}/{countryCode}
-- 설명 : 특정 연도, 국가 데이터를 재호출하여 덮어쓰기 기능
+- 설명 : 특정 연도, 국가 데이터를 재호출하여 업데이트
 - Request
   - Path Variable : 2025, KR
 - Response 예시
